@@ -14,6 +14,18 @@ class Amazon(BasePage):
     SearchResultsSectionItems = Locator(
         By.CSS_SELECTOR, "[data-cel-widget^='search_result_']"
     )
+    SignInLink = Locator(By.CSS_SELECTOR, "a#nav-link-accountList")
+    SignInFormEmail = Locator(By.CSS_SELECTOR, "input#ap_email")
+    SignInFormPassword = Locator(By.CSS_SELECTOR, "input#ap_password")
+    SignInFormSubmit = Locator(By.CSS_SELECTOR, "input[type='submit']")
+
+    NavLinkFresh = Locator(By.CSS_SELECTOR, "a#nav-link-fresh")
+    CheckoutCart = Locator(By.CSS_SELECTOR, "a#nav-cart")
+
+    FreshCheckoutButton = Locator(By.CSS_SELECTOR, "input[name*='ALMCheckout']")
+    ProceedToCheckoutButton = Locator(By.CSS_SELECTOR, "a[name='proceedToCheckout']")
+
+    FreshTimeSlots = Locator(By.CSS_SELECTOR, "ul.ss-carousel-items li")
 
     def get_homepage(self):
         self.driver.get("https://www.amazon.com/")
@@ -50,3 +62,82 @@ class Amazon(BasePage):
     def click_search_result(self, search_result: RemoteWebElement):
         search_result.location_once_scrolled_into_view
         search_result.find_element_by_css_selector("img").click()
+
+    def login(self, email: str, password: str):
+        signin_link = self.driver.find_element(
+            by=self.SignInLink.by, value=self.SignInLink.value
+        )
+
+        # import pdb; pdb.set_trace()
+
+        signin_link.click()
+
+        form_email = self.driver.find_element(
+            by=self.SignInFormEmail.by, value=self.SignInFormEmail.value
+        )
+
+        form_email.send_keys(email)
+
+        submit_button = self.driver.find_element(
+            by=self.SignInFormSubmit.by, value=self.SignInFormSubmit.value
+        )
+
+        submit_button.click()
+
+        form_password = self.driver.find_element(
+            by=self.SignInFormPassword.by, value=self.SignInFormPassword.value
+        )
+
+        form_password.send_keys(password)
+
+        submit_button = self.driver.find_element(
+            by=self.SignInFormSubmit.by, value=self.SignInFormSubmit.value
+        )
+
+        submit_button.click()
+
+        self.driver
+
+    def click_fresh_nav_link(self):
+        nav_fresh_link = self.driver.find_element(
+            by=self.NavLinkFresh.by, value=self.NavLinkFresh.value
+        )
+
+        nav_fresh_link.click()
+
+    def click_checkout_cart(self):
+        cart = self.driver.find_element(
+            by=self.CheckoutCart.by, value=self.CheckoutCart.value
+        )
+
+        cart.click()
+
+    def click_amazon_fresh_checkout_button(self):
+        button = self.driver.find_element(
+            by=self.FreshCheckoutButton.by, value=self.FreshCheckoutButton.value
+        )
+
+        button.click()
+
+    def click_on_proceed_to_checkout_button(self):
+        button = self.driver.find_element(
+            by=self.ProceedToCheckoutButton.by, value=self.ProceedToCheckoutButton.value
+        )
+
+        button.click()
+
+    def get_fresh_time_slots(self):
+        slots = self.driver.find_elements(
+            by=self.FreshTimeSlots.by, value=self.FreshTimeSlots.value
+        )
+
+        return slots
+
+    def any_available_slots(self):
+        result = False
+        slots = self.get_fresh_time_slots()
+        for slot in slots:
+            if "Not available" not in slot.text:
+                result = True
+
+        return result

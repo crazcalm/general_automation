@@ -34,3 +34,5 @@ If you wanted to write a script to log into Amazon, search for python books and 
 
 - Add information on repo organization structure.
 	+ Let people know where new scrips should be added.
+
+- Add Note about how "playsound" depends on you installing "python3-gi"
