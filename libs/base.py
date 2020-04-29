@@ -37,6 +37,9 @@ class BasePage:
     def find_element(self, by, value):
         return self.driver.find_element(by=by, value=value)
 
+    def find_elements(self, by, value):
+        return self.driver.find_elements(by=by, value=value)
+
 
 def get_webdriver(driver_name: str) -> RemoteWebDriver:
     """
