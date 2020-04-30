@@ -1,4 +1,4 @@
-# general_automation
+# General Automation
 This repo is a place for me to house automation scripts.
 
 ## Purpose:
@@ -7,6 +7,9 @@ The purpose of this repo is to create a bare bones automation skeleton that can 
 ## Dependencies:
 - Selenium
 - Python
+
+## Current Sites:
+- [Amazon](https://github.com/crazcalm/general_automation/tree/master/sites/amazon)
 
 
 ## Helpful Notes:
@@ -23,10 +26,23 @@ Page object design is the idea of separating the low level details of how you in
 #### For example:
 In the case of Amazon, you would create a an Amazon object that has method describing actions you would like to take, such as searching for an item, logging in, etc.
 
-If you wanted to write a script to log into Amazon, search for python books and open the top ten results in a new tab so you can review them, that would look like this:
+If you wanted to write a script to log into Amazon, search for python books and open the top ten results in a new tab so you can review them, that would look like [this](https://google.com).
 
-    # TODO -- Add code snippet
-    # TODO -- Add recording of code snippet?
+
+## Trouble Shooting:
+### playsound package:
+On linux, the playsound package is dependent on the gi package. If you use your system's python version, you can install via your package manger:
+
+	sudo apt install python3-gi
+
+If you want to use a virtual environment, then you can use this workaround ([link](https://stackoverflow.com/questions/53365209/error-python-playsound-no-module-named-gi)).
+
+### ModuleNotFoundError:
+To fully understand this error, see the this [link](https://stackoverflow.com/questions/43728431/relative-imports-modulenotfounderror-no-module-named-x).
+
+One workaround include adding `PYTHONPATH=.` before your python command.
+
+**Note**: Python commands should be ran from the root of the directory.
 
 
 # TODO List:
