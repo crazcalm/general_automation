@@ -1,3 +1,5 @@
+from typing import List
+
 from libs.base import BasePage
 from libs.base import Locator
 
@@ -27,10 +29,20 @@ class Amazon(BasePage):
 
     FreshTimeSlots = Locator(By.CSS_SELECTOR, "ul.ss-carousel-items li")
 
-    def get_homepage(self):
+    def get_homepage(self) -> None:
+        """
+        Goes to Amazon's homepage
+        :return: None
+        """
         self.driver.get("https://www.amazon.com/")
 
-    def search_for(self, text: str):
+    def search_for(self, text: str) -> None:
+        """
+        Conducts a search using Amazon's search bar
+
+        :param text: str
+        :return: None
+        """
         text_box = self.find_element(by=self.SearchBox.by, value=self.SearchBox.value)
 
         text_box.send_keys(text)
@@ -41,7 +53,12 @@ class Amazon(BasePage):
 
         submit_search_icon.click()
 
-    def get_search_results(self):
+    def get_search_results(self) -> List[RemoteWebElement]:
+        """
+        Returns a list of WebElements representing the the Amazon search result items
+
+        :return: list[RemoteWebElement]
+        """
         # Waiting for the page to load
         WebDriverWait(self.driver, 100).until(
             EC.visibility_of_any_elements_located(
@@ -59,18 +76,32 @@ class Amazon(BasePage):
 
         return search_result_items
 
-    def click_search_result(self, search_result: RemoteWebElement):
-        search_result.location_once_scrolled_into_view
+    @staticmethod
+    def click_search_result(search_result: RemoteWebElement) -> None:
+        """
+        Clicks on the passed in Amazon search result
+
+        :param search_result: RemoteWebElement
+        :return: None
+        """
+        _ = search_result.location_once_scrolled_into_view
         search_result.find_element_by_css_selector("img").click()
 
-    def login(self, email: str, password: str):
-        signin_link = self.driver.find_element(
+    def login(self, email: str, password: str) -> None:
+        """
+        Log into the Amazon site
+
+        :param email: str
+        :param password: str
+        :return: None
+        """
+        sign_in_link = self.driver.find_element(
             by=self.SignInLink.by, value=self.SignInLink.value
         )
 
-        # import pdb; pdb.set_trace()
+        sign_in_link.click()
 
-        signin_link.click()
+        self.wait_for_element_to_be_present(self.SignInFormEmail)
 
         form_email = self.driver.find_element(
             by=self.SignInFormEmail.by, value=self.SignInFormEmail.value
@@ -84,6 +115,8 @@ class Amazon(BasePage):
 
         submit_button.click()
 
+        self.wait_for_element_to_be_present(self.SignInFormPassword)
+
         form_password = self.driver.find_element(
             by=self.SignInFormPassword.by, value=self.SignInFormPassword.value
         )
@@ -96,46 +129,89 @@ class Amazon(BasePage):
 
         submit_button.click()
 
-        self.driver
+    def click_fresh_nav_link(self: None):
+        """
+        Click on the Amazon Fresh link in the nav bar
 
-    def click_fresh_nav_link(self):
+        :return: None
+        """
+        self.wait_for_element_to_be_present(self.NavLinkFresh)
+
         nav_fresh_link = self.driver.find_element(
             by=self.NavLinkFresh.by, value=self.NavLinkFresh.value
         )
 
         nav_fresh_link.click()
 
-    def click_checkout_cart(self):
+    def click_checkout_cart(self) -> None:
+        """
+        Click on the checkout cart icon
+
+        :return: None
+        """
+        self.wait_for_element_to_be_present(self.CheckoutCart)
+
         cart = self.driver.find_element(
             by=self.CheckoutCart.by, value=self.CheckoutCart.value
         )
 
         cart.click()
 
-    def click_amazon_fresh_checkout_button(self):
+    def click_amazon_fresh_checkout_button(self) -> None:
+        """
+        Click the checkout button on the Amazon Fresh checkout page
+
+        :return: None
+        """
+        self.wait_for_element_to_be_present(self.FreshCheckoutButton)
+
         button = self.driver.find_element(
             by=self.FreshCheckoutButton.by, value=self.FreshCheckoutButton.value
         )
 
         button.click()
 
-    def click_on_proceed_to_checkout_button(self):
+    def click_on_proceed_to_checkout_button(self) -> None:
+        """
+        Click on the Proceed to Checkout button
+
+        :return: None
+        """
+        self.wait_for_element_to_be_present(self.ProceedToCheckoutButton)
+
         button = self.driver.find_element(
             by=self.ProceedToCheckoutButton.by, value=self.ProceedToCheckoutButton.value
         )
 
         button.click()
 
-    def get_fresh_time_slots(self):
+    def get_fresh_time_slots(self) -> List[RemoteWebElement]:
+        """
+        Return a list of slot WebElements
+
+        :return: list[RemoteWebElement]
+        """
+        self.wait_for_element_to_be_present(self.FreshTimeSlots)
+
         slots = self.driver.find_elements(
             by=self.FreshTimeSlots.by, value=self.FreshTimeSlots.value
         )
 
         return slots
 
-    def any_available_slots(self):
+    def any_available_slots(self) -> bool:
+        """
+        Checks to see if any slots are available
+
+        :return: bool
+        """
         result = False
         slots = self.get_fresh_time_slots()
+
+        # Scroll down to bring the slots in view
+        if slots:
+            self.scroll_to_element(slots[0])
+
         for slot in slots:
             if "Not available" not in slot.text:
                 result = True
